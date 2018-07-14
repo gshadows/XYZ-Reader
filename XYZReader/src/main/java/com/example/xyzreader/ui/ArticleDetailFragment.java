@@ -176,11 +176,8 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                mRootView.findViewById(R.id.meta_bar)
-                                        .setBackgroundColor(mMutedColor);
+                                mRootView.setTag(bitmap);
+                                ((ArticleDetailActivity)getActivity()).onUpdatePhoto(imageContainer.getRequestUrl(), bitmap);
                                 updateStatusBar();
                             }
                         }
@@ -197,6 +194,8 @@ public class ArticleDetailFragment extends Fragment implements
             bodyView.setText("N/A");
         }
     }
+    
+    public View getRootView() { return mRootView; }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

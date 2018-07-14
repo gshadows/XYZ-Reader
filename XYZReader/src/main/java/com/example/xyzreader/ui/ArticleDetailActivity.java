@@ -6,19 +6,25 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -35,6 +41,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
+    private ImageView mPhotoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,8 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         });
     
+        mPhotoView = findViewById(R.id.photo);
+    
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
@@ -112,19 +121,44 @@ public class ArticleDetailActivity extends AppCompatActivity
             mStartId = 0;
         }
     }
-
+    
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
-
+    
+    private String mCurrentPhotoUrl;
+    
+    public void onUpdatePhoto (@NonNull String url, @NonNull Bitmap bitmap) {
+        if (!url.equals(mCurrentPhotoUrl)) return;
+        if (bitmap == null) return;
+        Palette p = Palette.generate(bitmap, 12);
+        int mutedColor = p.getDarkMutedColor(0xFF333333);
+        mPhotoView.setImageBitmap(bitmap);
+        findViewById(R.id.meta_bar).setBackgroundColor(mutedColor);
+    }
+    
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
-        @Override
+  
+      @Override
+      public void setPrimaryItem (ViewGroup container, int position, Object object) { 
+        super.setPrimaryItem(container, position, object);
+        if (mCursor == null) return;
+        mCursor.moveToPosition(position);
+        mCurrentPhotoUrl = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+        if (object != null) {
+            View rootView = ((ArticleDetailFragment)object).getView();
+            Bitmap bitmap = null;
+            if (rootView != null) bitmap = (Bitmap)rootView.getTag();
+            if (bitmap != null) onUpdatePhoto(mCurrentPhotoUrl, bitmap);
+        }
+      }
+      
+      @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
             return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
