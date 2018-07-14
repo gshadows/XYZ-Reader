@@ -23,6 +23,7 @@
       app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
       app:expandedTitleMarginStart="@dimen/detail_photo_height"
       app:layout_scrollFlags="scroll|exitUntilCollapsed"
+      android:elevation="4dp"
       >
       
       <ImageView
@@ -38,9 +39,8 @@
       <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="8dp"
-        android:minHeight="?attr/actionBarSize"
         app:layout_collapseMode="pin"
         />
     
@@ -57,7 +57,7 @@
     
     <com.example.xyzreader.ui.MaxWidthLinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:maxWidth="@dimen/detail_card_max_width"
       android:orientation="vertical">
@@ -115,8 +115,8 @@
   
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/share_fab"
-    android:layout_width="@dimen/fab_size"
-    android:layout_height="@dimen/fab_size"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
     android:layout_marginBottom="@dimen/fab_margin"
     android:layout_marginEnd="@dimen/fab_margin"
