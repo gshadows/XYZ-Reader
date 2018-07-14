@@ -9,7 +9,7 @@
   <android.support.design.widget.AppBarLayout
     android:id="@+id/appbar"
     android:layout_width="match_parent"
-    android:layout_height="112dp"
+    android:layout_height="@dimen/toolbar_expanded_height"
     android:background="@color/theme_primary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     >
@@ -18,10 +18,10 @@
       android:id="@+id/collapsing_toolbar"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:minHeight="48dp"
+      android:minHeight="@dimen/toolbar_collapsed_height"
       app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
       app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-      app:expandedTitleMarginStart="112dp"
+      app:expandedTitleMarginStart="@dimen/toolbar_expanded_height"
       app:layout_scrollFlags="scroll|exitUntilCollapsed"
       >
       
