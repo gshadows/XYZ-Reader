@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
 import java.text.ParseException;
@@ -15,6 +14,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +25,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -52,10 +53,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mMutedColor = 0xFF333333;
     private ColorDrawable mStatusBarColorDrawable;
 
-    private int mTopInset;
     private ImageView mPhotoView;
-    private int mScrollY;
-    private int mStatusBarFullOpacityBottom;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Most time functions can only handle 1902 - 2037
@@ -84,7 +82,6 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
 
-        mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
     }
 
@@ -104,26 +101,7 @@ public class ArticleDetailFragment extends Fragment implements
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-                    .setType("text/plain")
-                    .setText("Some sample text")
-                    .getIntent(), getString(R.string.action_share)));
-            }
-        });
-    
-    
-        mPhotoView = mRootView.findViewById(R.id.photo);
-        
-        Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        activity.setSupportActionBar(toolbar);
-        final ActionBar actionBar = activity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setHomeButtonEnabled(true);
+        mPhotoView = getActivity().findViewById(R.id.photo);
         
         mStatusBarColorDrawable = new ColorDrawable(0);
 
@@ -131,33 +109,18 @@ public class ArticleDetailFragment extends Fragment implements
         updateStatusBar();
         return mRootView;
     }
-
+    
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        if (item.getItemId() ==  android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(getActivity());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
     private void updateStatusBar() {
-        int color = 0;
-        if (mPhotoView != null && mTopInset != 0 && mScrollY > 0) {
-            float f = progress(mScrollY,
-                    mStatusBarFullOpacityBottom - mTopInset * 3,
-                    mStatusBarFullOpacityBottom - mTopInset);
-            color = Color.argb((int) (255 * f),
-                    (int) (Color.red(mMutedColor) * 0.9),
-                    (int) (Color.green(mMutedColor) * 0.9),
-                    (int) (Color.blue(mMutedColor) * 0.9));
-        }
-        mStatusBarColorDrawable.setColor(color);
-    }
-
-    static float progress(float v, float min, float max) {
-        return constrain((v - min) / (max - min), 0, 1);
-    }
-
-    static float constrain(float val, float min, float max) {
-        if (val < min) {
-            return min;
-        } else if (val > max) {
-            return max;
-        } else {
-            return val;
-        }
+        mStatusBarColorDrawable.setColor(0);
     }
 
     private Date parsePublishedDate() {
