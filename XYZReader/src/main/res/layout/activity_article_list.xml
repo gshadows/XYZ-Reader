@@ -54,6 +54,8 @@
       android:paddingRight="@dimen/list_side_margin"
       android:paddingTop="8dp"
       android:scrollbarStyle="outsideOverlay"
+      app:layoutManager="android.support.v7.widget.GridLayoutManager"
+      app:spanCount="@integer/list_column_count"
       />
   </android.support.v4.widget.SwipeRefreshLayout>
   

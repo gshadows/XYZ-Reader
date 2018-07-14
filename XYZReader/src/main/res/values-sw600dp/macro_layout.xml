@@ -1,4 +1,7 @@
 <resources>
+    <!-- list -->
+    <integer name="list_column_count">4</integer>
+    
     <!-- detail -->
     <dimen name="detail_photo_height">384dp</dimen>
     <dimen name="detail_card_top_margin">384dp</dimen>
