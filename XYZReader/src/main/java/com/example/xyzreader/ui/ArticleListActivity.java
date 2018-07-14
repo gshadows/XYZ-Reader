@@ -51,12 +51,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
+        
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-
+        
         mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView.setNestedScrollingEnabled(true);
         getLoaderManager().initLoader(0, null, this);
-
+        
         if (savedInstanceState == null) {
             refresh();
         }
@@ -69,8 +70,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(mRefreshingReceiver,
-                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+        registerReceiver(mRefreshingReceiver, new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }
 
     @Override

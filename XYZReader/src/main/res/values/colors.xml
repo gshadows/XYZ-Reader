@@ -17,10 +17,15 @@
 
 <resources>
     <color name="photo_placeholder">#ccc</color>
-
+    
     <color name="theme_primary">#FAFAFA</color>
     <color name="theme_primary_dark">#C7C7C7</color>
     <color name="theme_accent">#FFC107</color>
     
     <color name="text_color">#000000</color>
+    
+    <!-- Details fragment -->
+    <color name="detail_title_bg_color">#333</color>
+    <color name="detail_title_color">#fff</color>
+    <color name="details_date_color">#8fff</color>
 </resources>
