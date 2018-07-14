@@ -22,7 +22,7 @@
       app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
       app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
       app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-      android:elevation="4dp"
+      android:elevation="@dimen/toolbar_elevation"
       >
       
       <ImageView
@@ -39,7 +39,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_collapsed_height"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/toolbar_margin_top"
         app:layout_collapseMode="pin"
         />
     

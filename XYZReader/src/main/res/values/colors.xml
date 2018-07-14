@@ -28,4 +28,5 @@
     <color name="detail_title_bg_color">#333</color>
     <color name="detail_title_color">#fff</color>
     <color name="details_date_color">#8fff</color>
+    <color name="grid_subtitle_color">#6000</color>
 </resources>

@@ -1,6 +1,5 @@
 <android.support.v4.widget.NestedScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/scrollview"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -22,7 +21,7 @@
       android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
       android:background="@color/detail_title_bg_color"
       android:orientation="vertical"
-      android:elevation="4dp"
+      android:elevation="@dimen/detail_title_elevation"
       android:paddingBottom="@dimen/detail_metabar_vert_padding"
       android:paddingLeft="@dimen/detail_inner_horiz_margin"
       android:paddingRight="@dimen/detail_inner_horiz_margin"
