@@ -19,9 +19,8 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:minHeight="@dimen/toolbar_collapsed_height"
-      app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-      app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-      app:expandedTitleMarginStart="@dimen/detail_photo_height"
+      app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+      app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
       app:layout_scrollFlags="scroll|exitUntilCollapsed"
       android:elevation="4dp"
       >
@@ -39,8 +38,8 @@
       <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="8dp"
+        android:layout_height="@dimen/toolbar_collapsed_height"
+        android:layout_marginTop="16dp"
         app:layout_collapseMode="pin"
         />
     
