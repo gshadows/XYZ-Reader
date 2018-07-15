@@ -9,11 +9,16 @@ import android.graphics.drawable.ColorDrawable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.os.PatternMatcher;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -42,7 +47,9 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String ARG_ITEM_ID = "item_id";
 
     private Cursor mCursor;
+    private String[] mParagraphs;
     private long mItemId;
+    
     private View mRootView;
     private ColorDrawable mStatusBarColorDrawable;
 
@@ -122,7 +129,37 @@ public class ArticleDetailFragment extends Fragment implements
             return new Date();
         }
     }
-
+    
+    
+    private class TextViewHolder extends RecyclerView.ViewHolder {
+        public TextView mTextView;
+        public TextViewHolder (View itemView) {
+            super(itemView);
+            mTextView = itemView.findViewById(R.id.paragraph_text);
+        }
+    }
+    private class TextAdapter extends RecyclerView.Adapter<TextViewHolder> {
+        @NonNull @Override
+        public TextViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = getActivity().getLayoutInflater().inflate(R.layout.list_item_text, parent, false);
+            return new TextViewHolder(view);
+        }
+        
+        private boolean exists (int position) { return (position >= 0) && (mParagraphs != null) && (position < mParagraphs.length); }
+        
+        @Override
+        public void onBindViewHolder (@NonNull TextViewHolder holder, int position) {
+            if (!exists(position)) return;
+            ((TextView)holder.mTextView).setText(mParagraphs[position]);
+        }
+        
+        @Override
+        public int getItemCount() {
+            return (mParagraphs == null) ? 0 : 10;//mParagraphs.length;
+        }
+    }
+    
+    
     private void bindViews() {
         if (mRootView == null) {
             return;
@@ -131,9 +168,11 @@ public class ArticleDetailFragment extends Fragment implements
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = mRootView.findViewById(R.id.article_body);
-
-
+        RecyclerView recyclerView = mRootView.findViewById(R.id.article_body_rv);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setAdapter(new TextAdapter());
+        
+    
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
@@ -158,7 +197,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            //bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -180,13 +219,35 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
-            bodyView.setText("N/A");
         }
     }
     
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
+    }
+    
+    private static String[] splitParagraphsRemovingNewlines (String str) {
+        if ((str == null) || (str.isEmpty())) return null;
+        str = str.replaceAll("\r\n", "\n");
+        ArrayList<String> list = new ArrayList<>(); // Paragraphs (split result).
+        int from = 0;
+        while (true) {
+            int idx = str.indexOf("\n\n", from);
+            if (idx < 0) {
+                // Last paragraph.
+                if (from > 0) { // skip empty string
+                    list.add(str.substring(from).replace('\n', ' ')); // Last entry.
+                }
+                break;
+            }
+            // Have more paragraphs.
+            if (idx - from > 0) { // skip empty string
+                list.add(str.substring(from, idx).replace('\n', ' ')); // Last entry.
+            }
+            from = idx + 2; // skip found newline.
+        }
+        return list.toArray(new String[0]);
     }
 
     @Override
@@ -203,6 +264,9 @@ public class ArticleDetailFragment extends Fragment implements
             Log.e(TAG, "Error reading item detail cursor");
             mCursor.close();
             mCursor = null;
+        }
+        if (mCursor != null) {
+            mParagraphs = splitParagraphsRemovingNewlines(mCursor.getString(ArticleLoader.Query.BODY));
         }
 
         bindViews();
