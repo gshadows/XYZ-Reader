@@ -12,7 +12,14 @@
     android:layout_height="@dimen/toolbar_expanded_height"
     android:background="@color/theme_primary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:stateListAnimator="@null"
     >
+    <!--
+      android:stateListAnimator="@null" ia a workaround for Android internal crash:
+      https://stackoverflow.com/questions/40928788/cant-call-void-android-view-view-setelevationfloat-on-null-object-in-lapism-s
+      https://issuetracker.google.com/issues/64431012
+      https://issuetracker.google.com/issues/72614327
+    -->
     
     <android.support.design.widget.CollapsingToolbarLayout
       android:id="@+id/collapsing_toolbar"
