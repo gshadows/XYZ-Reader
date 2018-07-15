@@ -45,6 +45,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Most time functions can only handle 1902 - 2037
     private final GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    
+    private boolean mIsLoaded = false; // Disallow RV onClick until load completes.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     private void refresh() {
+        mIsLoaded = false;
         startService(new Intent(this, UpdaterService.class));
     }
 
@@ -104,10 +107,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
+        mIsLoaded = true;
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        mIsLoaded = false;
         mRecyclerView.setAdapter(null);
     }
 
@@ -131,6 +136,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (!mIsLoaded) return; // Disallow RV onClick until load completes.
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                 }
