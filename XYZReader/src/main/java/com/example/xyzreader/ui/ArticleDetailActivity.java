@@ -41,6 +41,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     private ImageView mPhotoView;
+    
+    private String mCurrentPhotoUrl;
+    private int mCurrentPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +82,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if ((mCursor == null) || !mCursor.moveToPosition(mCurrentPage)) return;
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(ArticleDetailActivity.this)
                     .setType("text/plain")
-                    .setText("Some sample text")
+                    .setText(getString(R.string.share_prefix) + mCursor.getString(ArticleLoader.Query.TITLE))
                     .getIntent(), getString(R.string.action_share)));
             }
         });
@@ -127,8 +131,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPagerAdapter.notifyDataSetChanged();
     }
     
-    private String mCurrentPhotoUrl;
-    
     public void onUpdatePhoto (@NonNull String url, @NonNull Bitmap bitmap) {
         if (!url.equals(mCurrentPhotoUrl)) return;
         if (bitmap == null) return;
@@ -147,6 +149,7 @@ public class ArticleDetailActivity extends AppCompatActivity
       public void setPrimaryItem (ViewGroup container, int position, Object object) { 
         super.setPrimaryItem(container, position, object);
         if (mCursor == null) return;
+        mCurrentPage = position;
         mCursor.moveToPosition(position);
         mCurrentPhotoUrl = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
         if (object != null) {

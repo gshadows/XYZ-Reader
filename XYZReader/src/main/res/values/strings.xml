@@ -8,5 +8,6 @@
     <string name="action_share">Share</string>
     
     <string name="photo_desc">Article title photo</string>
+    <string name="share_prefix">Now reading a great article!\n</string>
 
 </resources>
