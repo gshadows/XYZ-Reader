@@ -9,7 +9,7 @@
     <dimen name="toolbar_margin_top">16dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="detail_title_elevation">4dp</dimen>
-    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation">1dp</dimen>
     <dimen name="card_corner_radius">8dp</dimen>
     <dimen name="grid_text_padding">16dp</dimen>
     <dimen name="grid_text_padding_bottom">4dp</dimen>
